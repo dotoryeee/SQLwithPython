@@ -1,5 +1,5 @@
-import proj1.member.mem_dao as dao
-import proj1.member.mem_vo as vo
+import member.mem_dao as dao
+import member.mem_vo as vo
 
 class Service:
     login_id=None   #로그인 한 사람의 id를 저장할 변수

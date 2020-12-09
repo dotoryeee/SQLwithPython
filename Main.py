@@ -1,4 +1,4 @@
-import proj1.member.mem_menu as mem_menu
+import member.mem_menu as mem_menu
 #import proj1.board.board_menu as board_menu
 def main():
     m_menu = mem_menu.Mem_Menu('hr', 'hr', 'localhost:1521/xe', 'utf-8')
