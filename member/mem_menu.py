@@ -1,4 +1,4 @@
-import member.mem_service as service
+import proj1.member.mem_service as service
 
 class Mem_Menu:
     def __init__(self, id, pwd, addr, enc):

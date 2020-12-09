@@ -1,5 +1,5 @@
 import cx_Oracle
-import member.mem_vo as vo
+import proj1.member.mem_vo as vo
 
 class Dao:
     def __init__(self, id, pwd, addr, enc):

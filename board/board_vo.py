@@ -7,6 +7,6 @@ class Board:
         self.content = content
 
     def __str__(self):
-        return 'num:'+self.num+'/writer:'+self.writer+'/w_date:'+self.w_date+'/title:'+self.title+'/content:'+self.content
+        return 'num:'+str(self.num)+'/writer:'+self.writer+'/w_date:'+str(self.w_date)+'/title:'+self.title+'/content:'+self.content
 
 

@@ -1,7 +1,7 @@
 import cx_Oracle
-import board.board_vo as vo
+import proj1.board.board_vo as bv
 
-class Dao():
+class Dao:
     def __init__(self, id, pwd, addr, enc):
         self.id = id
         self.pwd = pwd
@@ -11,65 +11,80 @@ class Dao():
     def conn(self):#db 연결
         return cx_Oracle.connect(self.id, self.pwd, self.addr, encoding=self.enc)
 
-    def disconn(self, conn):
+    def disconn(self, conn):#db 끊기
         conn.close()
 
-    def insert(self, data):
+    def insert(self, b):
         my_conn = self.conn()
         cursor = my_conn.cursor()
-        sql = 'insert into board values(seq_board_num:nextval, :1, sysdate, :2, :3)'
-        d = (data.writer, data.title, data.content)
-        cursor.excute(sql, d)
+        sql = 'insert into board values(seq_board_num.nextval, :1, sysdate, :2, :3)'
+        t = (b.writer, b.title, b.content)
+        cursor.execute(sql, t)
         my_conn.commit()
         self.disconn(my_conn)
 
-    def select(self, num):
+    def selectByNum(self, num):#번호로 검색
         my_conn = self.conn()
         cursor = my_conn.cursor()
-        sql = 'select * from board where num =:1'
-        d = (num, )
-        cursor.excute(sql, d)
-        received = cursor.fetchone()
-        if received is not None:
-            return vo.Board(received[0], received[1], received[2], received[3], received[4])
+        sql = 'select * from board where num=:1'
+        t = (num,)
+        cursor.execute(sql, t)
+        row = cursor.fetchone()
         self.disconn(my_conn)
+        if row is not None:
+            return bv.Board(row[0], row[1], row[2], row[3], row[4])
 
-    def selectAll(self):
+    def selectByWriter(self, writer):#작성자로 검색
         my_conn = self.conn()
         cursor = my_conn.cursor()
-        sql = 'select * from board'
-        cursor.excute(sql)
-        datas = []
+        sql = 'select * from board where writer=:1 order by num'
+        t = (writer,)
+        cursor.execute(sql, t)
+        bb = []
         for row in cursor:
-            datas.append(vo.Board(row[0], row[1], row[2], row[3], row[4]))
-        self.disconn(my_conn)
-        return datas
+            bb.append(bv.Board(row[0], row[1], row[2], row[3], row[4]))
 
-    def selectMemberPost(self, writer):
+        self.disconn(my_conn)
+        return bb
+
+    def selectByTitle(self, title):#제목으로 검색
         my_conn = self.conn()
         cursor = my_conn.cursor()
-        sql = 'select * from board where writer=:1'
-        d = (writer, )
-        cursor.excute(sql, d)
-        datas = []
+        sql = "select * from board where title like '%"+title+"%' order by num"
+        cursor.execute(sql)
+        bb = []
         for row in cursor:
-            datas.append(vo.Board(row[0],row[2],row[3],row[4]))
-        self.disconn(my_conn)
-        return datas
+            bb.append(bv.Board(row[0], row[1], row[2], row[3], row[4]))
 
-    def delete(self, num, id):
+        self.disconn(my_conn)
+        return bb
+
+    def selectAll(self):#전체검색
         my_conn = self.conn()
         cursor = my_conn.cursor()
-        sql = 'delete board where num =:1 and writer =:2'
-        d = (num, id)
-        cursor.excute(sql, d)
-        self.disconn(my_conn)
+        sql = 'select * from board order by num'
+        cursor.execute(sql)
+        bb = []
+        for row in cursor:
+            bb.append(bv.Board(row[0], row[1], row[2], row[3], row[4]))
 
-    def update(self, data):
+        self.disconn(my_conn)
+        return bb
+
+    def update(self, b):
         my_conn = self.conn()
         cursor = my_conn.cursor()
-        sql = 'update board set w_date = sysdate, title =:1, content =:2 where num =:3'
-        d = (data.title, data.content, data.num)
-        cursor.excute(sql, d)
+        sql = 'update board set title=:1, content=:2 where num=:3'
+        t = (b.title, b.content, b.num)
+        cursor.execute(sql, t)
+        my_conn.commit()
+        self.disconn(my_conn)
+
+    def delete(self, num):
+        my_conn = self.conn()
+        cursor = my_conn.cursor()
+        sql = 'delete board where num=:1'
+        t = (num,)
+        cursor.execute(sql, t)
         my_conn.commit()
         self.disconn(my_conn)
