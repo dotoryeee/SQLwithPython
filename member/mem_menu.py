@@ -1,21 +1,22 @@
-import mem_service as Service
+import proj1.member.mem_service as service
 
-class Menu():
-    def __init__(self):
-        self.service = Service.Service('hr', 'hr', 'localhost:1521/xe', 'utf-8')
+class Mem_Menu:
+    def __init__(self, id, pwd, addr, enc):
+        self.service = service.Service(id, pwd, addr, enc)
 
     def run(self):
+        print('회원관리 메뉴')
         while True:
-            mm = input('1.가입 2.로그인 3.정보수정 4.로그아웃 5.탈퇴 6.종료')
-            if mm = '1':
+            mm = int(input('1.가입 2.로그인 3.내정보수정 4.로그아웃 5.탈퇴 6.종료'))
+            if mm==1:
                 self.service.join()
-            if mm = '2':
+            elif mm==2:
                 self.service.login()
-            if mm = '3':
+            elif mm==3:
                 self.service.editMyInfo()
-            if mm = '4':
+            elif mm==4:
                 self.service.logout()
-            if mm = '5':
+            elif mm==5:
                 self.service.out()
-            if mm = '6':
+            elif mm==6:
                 break
